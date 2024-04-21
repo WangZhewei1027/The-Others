@@ -47,7 +47,7 @@ public class DoorOpenAndClose : MonoBehaviour
                 //intText.SetActive(true);
 
                 //If the E key is pressed
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetMouseButtonDown(0))
                 {
                     //If the door's Animator's state is set to the open animation
                     if (doorAnim.GetCurrentAnimatorStateInfo(0).IsName(doorOpenAnimName))

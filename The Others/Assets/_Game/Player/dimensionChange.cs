@@ -17,6 +17,8 @@ public class dimensionChange : MonoBehaviour
 
     private float col;
 
+    private state flag;
+
     void Update()
     {
         Ray ray = new Ray(transform.position, transform.forward);
@@ -32,23 +34,44 @@ public class dimensionChange : MonoBehaviour
 
                 obj = hit.collider.transform.root.gameObject;
 
+
+                try
+                {
+                    flag = obj.GetComponent<state>();
+                }
+
+                catch
+                {
+                    Debug.LogWarning(obj.name + "doesn't include a state script.");
+                    obj.AddComponent<state>();
+                }
+       
+
                 tf = obj.transform;
 
-                col = obj.GetComponent<Collider>().bounds.size.z;
+                //col = obj.GetComponent<Collider>().bounds.size.z;
+                //print(col);
 
-                //AudioSource Sound = hit.collider.gameObject.GetComponent<AudioSource>();
+                AudioSource Sound = hit.collider.gameObject.GetComponent<AudioSource>();
 
-                if (Input.GetKeyDown(KeyCode.F) && canChange)
+                if (Input.GetMouseButtonDown(1) && canChange)
                 {
-                    if (col < 0.1)
+                    col = obj.GetComponent<Collider>().bounds.size.z;
+                    print(col);
+                    canChange = false;
+                    if (!flag.stateIsLarge)
                     {
                         StartCoroutine(Enlarge());
-                        canChange = false;
+                        
+                        Sound.clip = enlarge;
+                        Sound.Play();
                     }
                     else
                     {
                         StartCoroutine(Shrink());
-                        canChange = false;
+                        
+                        Sound.clip = shrink;
+                        Sound.Play();
                     }
                 }
             }
@@ -57,24 +80,40 @@ public class dimensionChange : MonoBehaviour
 
     IEnumerator Shrink()
     {
-        while(col > 0.05)
+       // canChange = false;
+        col = obj.GetComponent<Collider>().bounds.size.z;
+        var cnt = 0;
+        while (col > 0.05 && cnt <= 300)
         {
+            cnt++;
             col = obj.GetComponent<Collider>().bounds.size.z;
-            print(col);
+            //print("shrinck: " + col + " in " + gameObject.name);
             tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 0.99f);
             yield return null;
         }
+        var bounds = obj.GetComponent<Collider>().bounds;
+        bounds.size = new Vector3(bounds.size.x, bounds.size.y, 0.05f);
         canChange = true;
+        flag.stateIsLarge = false;
+        print("Shrink Finished");
     }
 
     IEnumerator Enlarge()
     {
-        while(tf.localScale.z < 1)
+        //canChange = false;
+        var cnt = 0;
+        while (tf.localScale.z < 1 && cnt <= 300)
         {
+            cnt++;
+            col = obj.GetComponent<Collider>().bounds.size.z;
+            //print("enlarge: " + col);
+            tf = obj.transform;
             tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 1.05f);
             yield return null;
         }
         canChange = true;
+        flag.stateIsLarge = true;
+        print("Enlarge Finished");
     }
 
 }
