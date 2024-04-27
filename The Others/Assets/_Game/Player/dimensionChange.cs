@@ -17,7 +17,7 @@ public class dimensionChange : MonoBehaviour
 
     private float col;
 
-    private state flag;
+    private objectState flag;
 
     void Update()
     {
@@ -37,13 +37,13 @@ public class dimensionChange : MonoBehaviour
 
                 try
                 {
-                    flag = obj.GetComponent<state>();
+                    flag = obj.GetComponent<objectState>();
                 }
 
                 catch
                 {
-                    Debug.LogWarning(obj.name + "doesn't include a state script.");
-                    obj.AddComponent<state>();
+                    Debug.LogWarning(obj.name + "doesn't include a objectState script.");
+                    obj.AddComponent<objectState>();
                 }
        
 
