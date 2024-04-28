@@ -28,7 +28,6 @@ public class dimensionChange : MonoBehaviour
 
             RaycastHit hit;
 
-
             if (Physics.Raycast(ray, out hit, interactionDistance))
             {
 
@@ -86,36 +85,99 @@ public class dimensionChange : MonoBehaviour
 
     IEnumerator Shrink()
     {
-        Debug.LogWarning("启动了一个shrink协程");
-        var cnt = 0;
-        
-        while (col > 0.1 && cnt <= 1000)
+        if (flag.ChangeDimensionX)
         {
-            cnt++;
-            col = obj.GetComponent<Collider>().bounds.size.z;
-            print(col + obj.name);
-            tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 0.99f);
-            yield return new WaitForSeconds(0.008f);
+            var cnt = 0;
+            while (col > 0.1 && cnt <= 1000)
+            {
+                cnt++;
+                col = obj.GetComponent<Collider>().bounds.size.x;
+                print(col + obj.name);
+                tf.localScale = new Vector3(tf.localScale.x * 0.99f, tf.localScale.y, tf.localScale.z);
+                yield return new WaitForSeconds(0.008f);
+            }
+            flag.stateIsLarge = false;
+            canChange = true;
+            print("Shrink Finished");
         }
-        flag.stateIsLarge = false;
-        canChange = true; 
-        print("Shrink Finished");
+        else if (flag.ChangeDimensionY)
+        {
+            var cnt = 0;
+            while (col > 0.1 && cnt <= 1000)
+            {
+                cnt++;
+                col = obj.GetComponent<Collider>().bounds.size.y;
+                print(col + obj.name);
+                tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y * 0.99f, tf.localScale.z);
+                yield return new WaitForSeconds(0.008f);
+            }
+            flag.stateIsLarge = false;
+            canChange = true;
+            print("Shrink Finished");
+        }
+        else if (flag.ChangeDimensionZ)
+        {
+            var cnt = 0;
+            while (col > 0.1 && cnt <= 1000)
+            {
+                cnt++;
+                col = obj.GetComponent<Collider>().bounds.size.z;
+                print(col + obj.name);
+                tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 0.99f);
+                yield return new WaitForSeconds(0.008f);
+            }
+            flag.stateIsLarge = false;
+            canChange = true;
+            print("Shrink Finished");
+        }
+        
     }
 
     IEnumerator Enlarge()
     {
-        var cnt = 0;
-        
-        while (tf.localScale.z < 1 && cnt <= 1000)
+        if (flag.ChangeDimensionX)
         {
-            cnt++;
-            tf = obj.transform;
-            tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 1.05f);
-            yield return new WaitForSeconds(0.008f);
+            var cnt = 0;
+            while (tf.localScale.x < 1 && cnt <= 1000)
+            {
+                cnt++;
+                tf = obj.transform;
+                tf.localScale = new Vector3(tf.localScale.x * 1.05f, tf.localScale.y, tf.localScale.z );
+                yield return new WaitForSeconds(0.008f);
+            }
+            flag.stateIsLarge = true;
+            canChange = true;
+            print("Enlarge Finished");
         }
-        flag.stateIsLarge = true;
-        canChange = true;
-        print("Enlarge Finished");
+        else if (flag.ChangeDimensionY)
+        {
+            var cnt = 0;
+            while (tf.localScale.y < 1 && cnt <= 1000)
+            {
+                cnt++;
+                tf = obj.transform;
+                tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y * 1.05f, tf.localScale.z );
+                yield return new WaitForSeconds(0.008f);
+            }
+            flag.stateIsLarge = true;
+            canChange = true;
+            print("Enlarge Finished");
+        }
+        else if (flag.ChangeDimensionZ)
+        {
+            var cnt = 0;
+            while (tf.localScale.z < 1 && cnt <= 1000)
+            {
+                cnt++;
+                tf = obj.transform;
+                tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 1.05f);
+                yield return new WaitForSeconds(0.008f);
+            }
+            flag.stateIsLarge = true;
+            canChange = true;
+            print("Enlarge Finished");
+        }
+
     }
 
 }
