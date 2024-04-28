@@ -7,4 +7,5 @@ public class objectState : MonoBehaviour
     public bool stateIsLarge = true;
     public bool AllowToHold = true;
     public bool AllowToChangeDimension = true;
+    public bool ChangeDimensionX = false, ChangeDimensionY = false, ChangeDimensionZ = false;
 }

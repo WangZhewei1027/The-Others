@@ -9,6 +9,7 @@ public class dimensionChange : MonoBehaviour
 
     public AudioClip enlarge, shrink;
 
+    [SerializeField]
     private bool canChange = true;
 
     private GameObject obj;
@@ -21,57 +22,62 @@ public class dimensionChange : MonoBehaviour
 
     void Update()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
-
-        RaycastHit hit;
-
-
-        if (Physics.Raycast(ray, out hit, interactionDistance))
+        if (canChange)
         {
+            Ray ray = new Ray(transform.position, transform.forward);
 
-            if (hit.collider.gameObject.tag == "object")
+            RaycastHit hit;
+
+
+            if (Physics.Raycast(ray, out hit, interactionDistance))
             {
 
-                obj = hit.collider.gameObject;
-
-
-                try
+                if (hit.collider.gameObject.tag == "object")
                 {
+
+                    obj = hit.collider.gameObject;
+
                     flag = obj.GetComponent<objectState>();
-                }
 
-                catch
-                {
-                    Debug.LogWarning(obj.name + "doesn't include a objectState script.");
-                    obj.AddComponent<objectState>();
-                }
-       
+                    tf = obj.transform;
 
-                tf = obj.transform;
+                    AudioSource Sound = hit.collider.gameObject.GetComponent<AudioSource>();
 
-                //col = obj.GetComponent<Collider>().bounds.size.z;
-                //print(col);
-
-                AudioSource Sound = hit.collider.gameObject.GetComponent<AudioSource>();
-
-                if (Input.GetMouseButtonDown(1) && canChange)
-                {
-                    col = obj.GetComponent<Collider>().bounds.size.z;
-                    print(col);
-                    canChange = false;
-                    if (!flag.stateIsLarge)
+                    if (Input.GetMouseButtonDown(1) && canChange)
                     {
-                        StartCoroutine(Enlarge());
-                        
-                        Sound.clip = enlarge;
-                        Sound.Play();
-                    }
-                    else
-                    {
-                        StartCoroutine(Shrink());
-                        
-                        Sound.clip = shrink;
-                        Sound.Play();
+                        if (flag.ChangeDimensionX)
+                        {
+                            col = obj.GetComponent<Collider>().bounds.size.x;
+                        }
+                        else if (flag.ChangeDimensionY)
+                        {
+                            col = obj.GetComponent<Collider>().bounds.size.y;
+                        }
+                        else if (flag.ChangeDimensionZ)
+                        {
+                            col = obj.GetComponent<Collider>().bounds.size.z;
+                        }
+
+                        print(col);
+
+                        if (!flag.stateIsLarge)
+                        {
+                            canChange = false;
+                            StartCoroutine(Enlarge());
+
+                            Sound.clip = enlarge;
+                            Sound.Play();
+                        }
+                        else
+                        {
+                            canChange = false;
+                            StartCoroutine(Shrink());
+
+                            Sound.clip = shrink;
+                            Sound.Play();
+                        }
+
+
                     }
                 }
             }
@@ -80,39 +86,35 @@ public class dimensionChange : MonoBehaviour
 
     IEnumerator Shrink()
     {
-       // canChange = false;
-        col = obj.GetComponent<Collider>().bounds.size.z;
+        Debug.LogWarning("启动了一个shrink协程");
         var cnt = 0;
-        while (col > 0.05 && cnt <= 300)
+        
+        while (col > 0.1 && cnt <= 1000)
         {
             cnt++;
             col = obj.GetComponent<Collider>().bounds.size.z;
-            //print("shrinck: " + col + " in " + gameObject.name);
+            print(col + obj.name);
             tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 0.99f);
-            yield return null;
+            yield return new WaitForSeconds(0.008f);
         }
-        var bounds = obj.GetComponent<Collider>().bounds;
-        bounds.size = new Vector3(bounds.size.x, bounds.size.y, 0.05f);
-        canChange = true;
         flag.stateIsLarge = false;
+        canChange = true; 
         print("Shrink Finished");
     }
 
     IEnumerator Enlarge()
     {
-        //canChange = false;
         var cnt = 0;
-        while (tf.localScale.z < 1 && cnt <= 300)
+        
+        while (tf.localScale.z < 1 && cnt <= 1000)
         {
             cnt++;
-            col = obj.GetComponent<Collider>().bounds.size.z;
-            //print("enlarge: " + col);
             tf = obj.transform;
             tf.localScale = new Vector3(tf.localScale.x, tf.localScale.y, tf.localScale.z * 1.05f);
-            yield return null;
+            yield return new WaitForSeconds(0.008f);
         }
-        canChange = true;
         flag.stateIsLarge = true;
+        canChange = true;
         print("Enlarge Finished");
     }
 
