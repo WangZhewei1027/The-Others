@@ -13,8 +13,13 @@ public class DoorTrigger : MonoBehaviour
 
     public AudioSource doorAudioSource;
 
+    public Material litMaterial, dimMaterial;
+
+    public GameObject realDoor;
+
     private void OnCollisionEnter(Collision collision)
     {
+        print(collision.gameObject.name);
         Animator doorAnim = door.GetComponent<Animator>();
 
         //The doorSound's audio clip will change to the door open sound
@@ -29,7 +34,8 @@ public class DoorTrigger : MonoBehaviour
         //The door's open animation trigger is set (it plays)
         doorAnim.SetTrigger("open");
 
-        
+        ChangeMaterial(litMaterial);
+        realDoor.GetComponent<MeshRenderer>().material = litMaterial;
     }
 
     private void OnCollisionExit(Collision collision)
@@ -46,7 +52,17 @@ public class DoorTrigger : MonoBehaviour
         //The door's close animation trigger is set (it plays)
         doorAnim.SetTrigger("close");
 
+        ChangeMaterial(dimMaterial);
+        realDoor.GetComponent<MeshRenderer>().material = dimMaterial;
     }
 
+    private void ChangeMaterial(Material mat)
+    {
+        MeshRenderer[] childrenRenderers = GetComponentsInChildren<MeshRenderer>();
 
+        foreach (MeshRenderer renderer in childrenRenderers)
+        {
+            renderer.material = mat;
+        }
+    }
 }

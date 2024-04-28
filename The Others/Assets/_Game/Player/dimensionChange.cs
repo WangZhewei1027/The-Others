@@ -32,7 +32,7 @@ public class dimensionChange : MonoBehaviour
             if (hit.collider.gameObject.tag == "object")
             {
 
-                obj = hit.collider.transform.root.gameObject;
+                obj = hit.collider.gameObject;
 
 
                 try
