@@ -6,11 +6,13 @@ public class objectHold : MonoBehaviour
 {
     public float interactionDistance = 5f;
     public GameObject tempObject;
+    public AudioClip holdSound, releaseSound;
 
     private GameObject obj;
     private Rigidbody rb;
     private bool isHold = false;
     private objectState flag;
+    private AudioSource objSound;
 
     void Update()
     {
@@ -19,12 +21,16 @@ public class objectHold : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, interactionDistance) && hit.collider.gameObject.tag == "object")
         {
-            obj = hit.collider.transform.root.gameObject;
+            obj = hit.collider.gameObject;
             flag = obj.GetComponent<objectState>();
+            objSound = obj.GetComponent<AudioSource>();
 
             if (Input.GetMouseButton(0) && !isHold && flag.AllowToHold)
             {
                 HoldObject();
+                objSound.loop = true;
+                objSound.clip = holdSound;
+                objSound.Play();
             }
         }
 
@@ -33,6 +39,10 @@ public class objectHold : MonoBehaviour
             if (!Input.GetMouseButton(0))
             {
                 ReleaseObject();
+                objSound = obj.GetComponent<AudioSource>();
+                objSound.loop = false;
+                objSound.clip = releaseSound;
+                objSound.Play();
             }
         }
     }
