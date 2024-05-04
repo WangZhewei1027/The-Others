@@ -207,6 +207,11 @@ PrefabInstance:
       propertyPath: bobAmount.y
       value: 0.05
       objectReference: {fileID: 0}
+    - target: {fileID: 8730186692429391954, guid: d78254bb5668b4de08b70cca2d04910f,
+        type: 3}
+      propertyPath: enableCrouch
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 124366786697194525, guid: d78254bb5668b4de08b70cca2d04910f, type: 3}
     m_RemovedGameObjects:

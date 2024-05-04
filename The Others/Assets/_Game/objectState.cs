@@ -14,7 +14,7 @@ public class objectState : MonoBehaviour
     private Collider col;
     private bool canChange = true;
     private float percent = 0f;
-                        
+
 
     //[SerializeField] BoxCollider BoxCollider;
 
@@ -24,13 +24,18 @@ public class objectState : MonoBehaviour
     //    Gizmos.DrawCube(BoxCollider.bounds.center, BoxCollider.bounds.size);
     //}
 
+    private void Start()
+    {
+        col = GetComponent<Collider>();
+        if (changeX) percent = 0.1f / col.bounds.size.x;
+        if (changeY) percent = 0.1f / col.bounds.size.y;
+        if (changeZ) percent = 0.1f / col.bounds.size.z;
+    }
+
     public void try2invoke()
     {
         if (changeX)
         {
-            col = GetComponent<Collider>();
-            percent = 0.1f / col.bounds.size.x;
-
             if (canChange)
             {
                 if (stateIsLarge)
@@ -46,9 +51,6 @@ public class objectState : MonoBehaviour
         }
         if (changeY)
         {
-            col = GetComponent<Collider>();
-            percent = 0.1f / col.bounds.size.y;
-
             if (canChange)
             {
                 if (stateIsLarge)
@@ -64,9 +66,6 @@ public class objectState : MonoBehaviour
         }
         if (changeZ)
         {
-            col = GetComponent<Collider>();
-            percent = 0.1f / col.bounds.size.z;
-
             if (canChange)
             {
                 if (stateIsLarge)
