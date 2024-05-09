@@ -38,6 +38,7 @@ public class FirstPersonController : MonoBehaviour
     private float yaw = 0.0f;
     private float pitch = 0.0f;
     private Image crosshairObject;
+    private bool showCursor = false;
 
     #region Camera Zoom Variables
 
@@ -201,7 +202,8 @@ public class FirstPersonController : MonoBehaviour
     float camRotation;
 
     private void Update()
-    {
+    {   
+
         #region Camera
 
         // Control camera movement
